@@ -3,7 +3,7 @@ function createMap(){
     var mymap = L.map('map',{
         center: [34.2, -111.6873],
         zoom: 7,
-        zoomControl: false 
+        //zoomControl: false 
     });
     
     var streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
