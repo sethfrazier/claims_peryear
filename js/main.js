@@ -4,25 +4,42 @@ function createMap(){
         center: [34.2, -111.6873],
         zoom: 7,
         //zoomControl: false 
+        //layers: [streets, OpenMapSurfer_AdminBounds]
     });
+    
+  
     
     var streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1Ijoic2ZyYXppZXIiLCJhIjoiY2lzbDZmOXo1MDdtbjJ1cHUzZDFxMGpuayJ9.vyt9QGsmTezFJ1TtrI6Q2w'
-    }), 
+    }); 
         //TODO Get a different map for this
-        topo = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
-    }).addTo(mymap);
+    var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+}).addTo(mymap);
+
+    
+       var OpenMapSurfer_AdminBounds = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}', {
+	maxZoom: 19,
+	attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(mymap);
+    
+   
     
     var baseMaps = {
-    "Topo": topo,//get a better map for this selection
+    "Grayscale": greyscale,//get a better map for this selection
     "Streets": streets
     };
     
-    L.control.layers(baseMaps).addTo(mymap);
+    var overlayMaps = {
+        "Boundaries": OpenMapSurfer_AdminBounds
+    };
+    
+    L.control.layers(baseMaps, overlayMaps).addTo(mymap);
     
     //todo somehow make this work.... really dont know why this isn't working
     //mymap.addControl( new L.Control.Search({sourceData: searchBar}) );
