@@ -3,6 +3,8 @@ function createMap(){
     var mymap = L.map('map',{
         center: [34.1, -111.6873],
         zoom: 7,
+        maxZoom: 9,
+        minZoom: 6,
         //zoomControl: false 
         //layers: [streets, OpenMapSurfer_AdminBounds]
     });
@@ -53,7 +55,7 @@ var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
     //todo somehow make this work.... really dont know why this isn't working
     //mymap.addControl( new L.Control.Search({sourceData: searchBar}) );
     
-    
+    mymap.zoomControl.setPosition('topright');
     
     //call getData function to load data to map
     getData(mymap);
