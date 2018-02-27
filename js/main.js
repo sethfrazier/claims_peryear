@@ -1,7 +1,7 @@
 function createMap(){
     //create the map
     var mymap = L.map('map',{
-        center: [34.2, -111.6873],
+        center: [34.1, -111.6873],
         zoom: 7,
         //zoomControl: false 
         //layers: [streets, OpenMapSurfer_AdminBounds]
@@ -15,8 +15,16 @@ function createMap(){
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1Ijoic2ZyYXppZXIiLCJhIjoiY2lzbDZmOXo1MDdtbjJ1cHUzZDFxMGpuayJ9.vyt9QGsmTezFJ1TtrI6Q2w'
     }); 
+    
+    var Stamen_Toner = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
+	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+	subdomains: 'abcd',
+	minZoom: 0,
+	maxZoom: 20,
+	ext: 'png'
+});
         //TODO Get a different map for this
-    var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
 	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
 	subdomains: 'abcd',
 	maxZoom: 19
@@ -26,13 +34,14 @@ function createMap(){
        var OpenMapSurfer_AdminBounds = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}', {
 	maxZoom: 19,
 	attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(mymap);
+});
     
    
     
     var baseMaps = {
-    "Grayscale": greyscale,//get a better map for this selection
-    "Streets": streets
+    "Grayscale": greyscale,
+    "Streets": streets,
+    "Black and White": Stamen_Toner
     };
     
     var overlayMaps = {
@@ -180,7 +189,7 @@ function createLegend(map, attributes){
             for (var circle in circles){
                 //circle string
                 svg += '<circle class="legend-circle" id="' + circle + 
-                    '" fill="#F47821" fill-opacity="0.8" stroke="#000000" cx="90"/>';
+                    '" fill="#003399" fill-opacity="0.8" stroke="#e6e6e6" cx="90"/>';
                 
                 //text string
                 svg += '<text id="' + circle + '-text" x="170" y="'+circles[circle]+'"></text>';
@@ -272,14 +281,14 @@ function Popup(properties, attribute, layer, radius){
     this.layer=layer;
     this.year =  attribute.split("r")[1];
     this.claim = this.properties[attribute];
-    this.content = "<p><b>County:</b> " + this.properties.County+"</p> <p><b>Number of Claims in "+ this.year+":</b>"+ properties[attribute] + " mn</p>";
+    this.content = "<p><b><strong> " + this.properties.County+"</strong></p> <p><b>Number of Claims in "+ this.year+":</b>"+ properties[attribute] + " mn</p>";
     
-     var popupContent = "<p><b>County:</b> " + properties.County+"</p>";
+     //var popupContent = "<p><b>County:</b> " + properties.County+"</p>";
     
     //add formated attribute to panel content string
     
-    var year = attribute.split("r")[1];
-        popupContent += "<p><b>Number of Claims in "+ year+":</b>"+ properties[attribute] + " mn</p>";
+   // var year = attribute.split("r")[1];
+    //    popupContent += "<p><b>Number of Claims in "+ year+":</b>"+ properties[attribute] + " mn</p>";
         
         this.bindToLayer = function(){
             this.layer.bindPopup(this.content,{
@@ -315,11 +324,11 @@ function pointToLayer(feature, latlng, attributes){
     //create marker options
     var geojsonMarkerOptions = {
         radius: 8,
-        fillColor: "#ff7800",
-        color: "#000",
+        fillColor: "#003399",
+        color: "#e6e6e6",
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.8
+        fillOpacity: 0.6,
     };
     
     //For each feature, determine its value for the selected attribute
@@ -358,23 +367,6 @@ function pointToLayer(feature, latlng, attributes){
     
 };
 
-function searchBar(data, map, attributes){
-    var featureLayer = L.geoJson(data,{
-        
-        pointToLayer: function(feature, latlng){
-            return pointToLayer(feature,latlng,attributes)
-        }
-    });
-        
-    var searchControl = new L.Control.Search({
-        layer: featureLayer,
-        propertyName: 'County',
-    });
-    
-    return searchControl
-        
-     
-};
     //Add circle markers for point features to the map
     function createPropSymbols(data, map, attributes){
 
