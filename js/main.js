@@ -1,15 +1,22 @@
 function createMap(){
     //create the map
     var mymap = L.map('map',{
-        center: [34.1, -111.6873],
+        center: [34.2, -111.6873],
         zoom: 7,
-        maxZoom: 9,
+        maxZoom: 10,
         minZoom: 6,
         //zoomControl: false 
         //layers: [streets, OpenMapSurfer_AdminBounds]
     });
     
-  
+    var southWest = L.latLng(31, -115.4),
+    northEast = L.latLng(37.2, -108.5);
+    var bounds = L.latLngBounds(southWest, northEast);
+
+    mymap.setMaxBounds(bounds);
+    mymap.on('drag', function() {
+    mymap.panInsideBounds(bounds, { animate: true });
+    });
     
     var streets = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
