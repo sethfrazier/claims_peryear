@@ -9,6 +9,9 @@ function createMap(){
         //layers: [streets, OpenMapSurfer_AdminBounds]
     });
     
+    
+    var county = new L.geoJSON();
+    
     var southWest = L.latLng(31, -115.4),
     northEast = L.latLng(37.2, -108.5);
     var bounds = L.latLngBounds(southWest, northEast);
@@ -47,6 +50,10 @@ var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
     
    
     
+    //call getData function to load data to map
+    getCountyBound(mymap, county);
+    getData(mymap);
+    
     var baseMaps = {
     "Grayscale": greyscale,
     "Streets": streets,
@@ -54,8 +61,11 @@ var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
     };
     
     var overlayMaps = {
-        "Boundaries": OpenMapSurfer_AdminBounds
+        "Boundaries": OpenMapSurfer_AdminBounds,
+        "County": county
     };
+    
+    
     
     L.control.layers(baseMaps, overlayMaps).addTo(mymap);
     
@@ -64,8 +74,8 @@ var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/
     
     mymap.zoomControl.setPosition('topright');
     
-    //call getData function to load data to map
-    getData(mymap);
+    
+   
  
 };
 
@@ -290,7 +300,7 @@ function Popup(properties, attribute, layer, radius){
     this.layer=layer;
     this.year =  attribute.split("r")[1];
     this.claim = this.properties[attribute];
-    this.content = "<p><b><strong> " + this.properties.County+"</strong></p> <p><b>Number of Claims in "+ this.year+":</b>"+ properties[attribute] + " mn</p>";
+    this.content = "<p><b><strong> " + this.properties.County+"</strong></p> <p><b>Number of Claims in "+ this.year+":</b>"+ properties[attribute] + "</p>";
     
      //var popupContent = "<p><b>County:</b> " + properties.County+"</p>";
     
@@ -334,10 +344,10 @@ function pointToLayer(feature, latlng, attributes){
     var geojsonMarkerOptions = {
         radius: 8,
         fillColor: "#003399",
-        color: "#e6e6e6",
+        color: "##ffffff",
         weight: 1,
         opacity: 1,
-        fillOpacity: 0.6,
+        fillOpacity: 1,
     };
     
     //For each feature, determine its value for the selected attribute
@@ -426,7 +436,37 @@ function getData(map){
             createLegend(map, attributes);
             }
          
-    });
+    });  
+    
 };
+
+function onEachFeature (feature, layer) {
+    var label = L.marker(layer.getBounds().getCenter(), {
+      icon: L.divIcon({
+        className: 'label',
+        html: feature.properties.NAME,
+        iconSize: [100, 40]
+      })
+    }).addTo(map);
+  };
+
+function getCountyBound(map, county){
+    $.ajax("data/AZCountiesBound.geojson",{
+        dataType:"json",
+        success: function(response){
+            var countyBound = {
+                fillColor:'#ffffff',
+                color:'black',
+                opacity:0.4,
+                //zIndex: 0,
+                
+            };
+            
+           L.geoJSON(response, {
+               style: countyBound});
+        }
+    });
+};    
+
 
 $(document).ready(createMap);

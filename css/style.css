@@ -1,6 +1,7 @@
  
 
 body {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     overflow: hidden;
 }
 
@@ -9,15 +10,22 @@ body {
     border: solid grey 1px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
     margin: 10px auto;
-    width: 40%;
     position: absolute;
     text-align: center;
     z-index: 9999;
     border-radius: 5px;
     left: 10px;
+    color: #000099;
+}
+
+#header h2 {
+    margin: 2px;
+    padding: 5px 5px;
     
-    max-width: 60%;
-    
+}
+
+#header-years{
+    font-size: 20px;
 }
 
 #map { 
@@ -33,6 +41,7 @@ body {
 
 .leaflet-popup-content p {
     margin: 0.2em 0;
+    text-align: center;
     
 }
 
@@ -89,5 +98,7 @@ body {
 }
 
 .leaflet-control-layers{
-    outline-color: aliceblue;
+    
+    
+    
 }
