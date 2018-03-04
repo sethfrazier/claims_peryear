@@ -6,11 +6,18 @@ function createMap(){
         maxZoom: 10,
         minZoom: 6,
         //zoomControl: false 
-        //layers: [streets, OpenMapSurfer_AdminBounds]
     });
     
     
-    var county = new L.geoJSON();
+    var county = new L.geoJSON().bringToBack();
+    var state = new L.geoJSON();
+    
+    //county.addTo(mymap);
+    
+    getCountyBound(mymap, county);
+    getStateBound(mymap, state);
+    
+    county.bringToBack();
     
     var southWest = L.latLng(31, -115.4),
     northEast = L.latLng(37.2, -108.5);
@@ -26,56 +33,44 @@ function createMap(){
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1Ijoic2ZyYXppZXIiLCJhIjoiY2lzbDZmOXo1MDdtbjJ1cHUzZDFxMGpuayJ9.vyt9QGsmTezFJ1TtrI6Q2w'
-    }); 
+    }).addTo(mymap); 
     
-    var Stamen_Toner = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
-	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-	subdomains: 'abcd',
-	minZoom: 0,
-	maxZoom: 20,
-	ext: 'png'
-});
-        //TODO Get a different map for this
-var greyscale = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
-	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-	subdomains: 'abcd',
-	maxZoom: 19
-}).addTo(mymap);
+   var greyscale = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox.light',
+        accessToken: 'pk.eyJ1Ijoic2ZyYXppZXIiLCJhIjoiY2lzbDZmOXo1MDdtbjJ1cHUzZDFxMGpuayJ9.vyt9QGsmTezFJ1TtrI6Q2w'
+    }); 
 
     
-       var OpenMapSurfer_AdminBounds = L.tileLayer('https://korona.geog.uni-heidelberg.de/tiles/adminb/x={x}&y={y}&z={z}', {
-	maxZoom: 19,
-	attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
-    
-   
     
     //call getData function to load data to map
-    getCountyBound(mymap, county);
+    
     getData(mymap);
     
     var baseMaps = {
-    "Grayscale": greyscale,
     "Streets": streets,
-    "Black and White": Stamen_Toner
+    "Grayscale": greyscale
+    
     };
     
     var overlayMaps = {
-        "Boundaries": OpenMapSurfer_AdminBounds,
-        "County": county
+        "State Boundary": state,
+        "County Boundary": county,
+        
     };
     
     
     
     L.control.layers(baseMaps, overlayMaps).addTo(mymap);
     
-    //todo somehow make this work.... really dont know why this isn't working
-    //mymap.addControl( new L.Control.Search({sourceData: searchBar}) );
-    
     mymap.zoomControl.setPosition('topright');
     
-    
-   
+    mymap.on("overlayadd",function(event){
+        state.bringToBack();
+        county.bringToBack();
+        
+    })
  
 };
 
@@ -300,7 +295,7 @@ function Popup(properties, attribute, layer, radius){
     this.layer=layer;
     this.year =  attribute.split("r")[1];
     this.claim = this.properties[attribute];
-    this.content = "<p><b><strong> " + this.properties.County+"</strong></p> <p><b>Number of Claims in "+ this.year+":</b>"+ properties[attribute] + "</p>";
+    this.content = "<p><b><strong> " + this.properties.County+"</strong></p> <p><b>Number of Claims in "+ this.year+": </b>"+ properties[attribute] + "</p>";
     
      //var popupContent = "<p><b>County:</b> " + properties.County+"</p>";
     
@@ -347,7 +342,7 @@ function pointToLayer(feature, latlng, attributes){
         color: "##ffffff",
         weight: 1,
         opacity: 1,
-        fillOpacity: 1,
+        fillOpacity: 0.8,
     };
     
     //For each feature, determine its value for the selected attribute
@@ -440,33 +435,71 @@ function getData(map){
     
 };
 
-function onEachFeature (feature, layer) {
-    var label = L.marker(layer.getBounds().getCenter(), {
-      icon: L.divIcon({
-        className: 'label',
-        html: feature.properties.NAME,
-        iconSize: [100, 40]
-      })
-    }).addTo(map);
-  };
+/*Tried to do a label on the county lines but did not look good
+function onEachFeature(feature, layer) {
+    var toolTipText="";
+    toolTipContent = feature.properties.NAME;
+    console.log(toolTipContent);
+    layer.bindTooltip(toolTipContent,{
+        permanent: true,
+        sticky: true,
+        opacity: 0.8
+    }).openTooltip;
+    
+  };*/
+
+function createCountySymbol(data,county){
+    var countyOptions = {
+        fillColor:'#ffffff',
+        fillOpacity:0,
+        color:'black',
+        borderWidth:.25,
+        opacity:0.4,
+        
+    };
+     var geojsonLayer = L.geoJSON(data,{
+        style: countyOptions,
+    });
+    
+    county.addLayer(geojsonLayer);
+    
+};
 
 function getCountyBound(map, county){
     $.ajax("data/AZCountiesBound.geojson",{
         dataType:"json",
         success: function(response){
-            var countyBound = {
-                fillColor:'#ffffff',
+          createCountySymbol(response, county);  
+           
+        }
+    });
+};
+
+function createStateSymbol(data,state){
+    var stateOptions = {
+        fillColor:'#ffffff',
+        fillOpacity:0,
                 color:'black',
                 opacity:0.4,
                 //zIndex: 0,
-                
-            };
-            
-           L.geoJSON(response, {
-               style: countyBound});
+    };
+     var geojsonLayer = L.geoJSON(data,{
+        style: stateOptions,
+    });
+    
+    state.addLayer(geojsonLayer);
+    
+};
+
+function getStateBound(map, state){
+    $.ajax("data/AZStateBound.geojson",{
+        dataType:"json",
+        success: function(response){
+          createStateSymbol(response, state);  
+           
         }
     });
-};    
+};
 
 
 $(document).ready(createMap);
