@@ -363,18 +363,18 @@ function pointToLayer(feature, latlng, attributes){
     popup.bindToLayer();
     
     //event listeners to open popup on hover
-    layer.on({
+      /*layer.on({
         mouseover: function(){
             this.openPopup();
         },
         mouseout: function(){
             this.closePopup();
         },
-        /*click: function(){
+      click: function(){
             $("#panel").html(panelContent);
             console.log("in click function")
-        }*/
-    });
+        }
+    });*/
         
         //return the circle marker to the L.geoJson pointToLayer option
     return layer;

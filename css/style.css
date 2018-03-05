@@ -43,7 +43,9 @@
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
 }
 
-
+.leaflet-control-layers{
+    color:#000099 ;
+}
 
 .leaflet-popup-content-wrapper{
     background: white;
@@ -81,6 +83,10 @@
     border-radius: 5px;
 }
 
+.leaflet-control-attribution{
+    font-size: 8px;
+}
+
 .skip {
     background: rgba(255,255,255,0);
     border-width: 0;
@@ -113,13 +119,36 @@
     font-size: 14px;
 }
 
-.leaflet-tooltip-pane{
-    text-align: center;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    background-color: aquamarine;
-}
+
 
 .leaflet-control-zoom {
     border-radius: 5px;
 }
 
+.leaflet-touch .leaflet-bar a {
+
+    color:  #000099;
+
+}
+
+@media only screen and (min-width: 675px){
+
+    .leaflet-container .leaflet-control-attribution,
+
+    .leaflet-container .leaflet-control-scale {
+
+        font-size: 14px;
+
+    }
+
+
+
+    .legend-container {
+
+        display: none;
+
+    }
+
+
+
+}
