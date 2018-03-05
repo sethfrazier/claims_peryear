@@ -206,7 +206,7 @@ function createLegend(map, attributes){
                     '" fill="#003399" fill-opacity="0.8" stroke="#e6e6e6" cx="90"/>';
                 
                 //text string
-                svg += '<text id="' + circle + '-text" x="170" y="'+circles[circle]+'"></text>';
+                svg += '<text class = "legend-text" fill=#000099 id="' + circle + '-text" x="170" y="'+circles[circle]+'"></text>';
             };
             
             //close svg string
@@ -229,7 +229,7 @@ function createLegend(map, attributes){
 //update lengend with new attribute
 function updateLegend(map, attribute){
     var year = attribute.split("r")[1];
-    var content = "Number of Active Claims in Year: " + year;
+    var content = "Number of Active Mining Claims in: <b>" + year;
     //console.log("in updateLegend: "+content);
     
     //replace legend content
@@ -339,7 +339,7 @@ function pointToLayer(feature, latlng, attributes){
     var geojsonMarkerOptions = {
         radius: 8,
         fillColor: "#003399",
-        color: "##ffffff",
+        color: "#ffffff",
         weight: 1,
         opacity: 1,
         fillOpacity: 0.8,
@@ -452,9 +452,9 @@ function createCountySymbol(data,county){
     var countyOptions = {
         fillColor:'#ffffff',
         fillOpacity:0,
-        color:'black',
+        color:'grey',
         borderWidth:.25,
-        opacity:0.4,
+        opacity:0.6,
         
     };
      var geojsonLayer = L.geoJSON(data,{
@@ -480,7 +480,7 @@ function createStateSymbol(data,state){
         fillColor:'#ffffff',
         fillOpacity:0,
                 color:'black',
-                opacity:0.4,
+                opacity:0.5,
                 //zIndex: 0,
     };
      var geojsonLayer = L.geoJSON(data,{
