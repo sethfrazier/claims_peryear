@@ -1,8 +1,10 @@
- body {
+/*body font family*/ 
+body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     overflow: hidden;
 }
 
+/*header styles*/
 #header{
     background-color: rgba(255,255,255,0.9);
     border: solid grey 1px;
@@ -26,6 +28,7 @@
     font-size: 20px;
 }
 
+/*Map fill whole screen*/
 #map { 
     
     display: inline-block;
@@ -33,26 +36,31 @@
     width: 100vw;
 }
 
+/*leaflet override on font family*/
 .leaflet-container{
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
+/*over ride leaflet controls border defualts*/
 .leaflet-touch .leaflet-control-layers,
 .leaflet-touch .leaflet-bar {
     border: 1px solid gray;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
 }
 
+/*leaflet leyer control font color*/
 .leaflet-control-layers{
     color:#000099 ;
 }
 
+/*leaflet control overrides*/
 .leaflet-popup-content-wrapper{
     background: white;
     border: 1px solid grey;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
 }
 
+/*popup styles*/
 .leaflet-popup-content p {
     margin: 0.2em 0;
     text-align: center;
@@ -70,6 +78,7 @@
     z-index: 10;
 }*/
 
+/*sequence control container sytles*/
 .sequence-control-container{
     width: 300px;
     height: 30px;
@@ -83,10 +92,7 @@
     border-radius: 5px;
 }
 
-.leaflet-control-attribution{
-    font-size: 8px;
-}
-
+/*slider elements style*/
 .skip {
     background: rgba(255,255,255,0);
     border-width: 0;
@@ -104,8 +110,9 @@
     float: left;
 }
 
+/*legend style*/
 .legend-container{
-    width: 300px;
+    width: 275px;
     height: 200px;
     background-color: rgba(255,255,255,0.8);
     color: #000099;
@@ -115,40 +122,33 @@
     border: solid gray 1px;
     box-shadow: 0 1px 5px rgba(0,0,0,0.4);
     border-radius: 5px;
-    
     font-size: 14px;
 }
 
-
-
+/*override radius of zoom control*/
 .leaflet-control-zoom {
     border-radius: 5px;
 }
 
+/*zoom control color change*/
 .leaflet-touch .leaflet-bar a {
-
     color:  #000099;
-
 }
 
-@media only screen and (min-width: 675px){
+/*overide the attribution font size*/
+.leaflet-control-attribution{
+    font-size: 10px;
+}
+
+/*attempt at making map app function on mobile 
+ran out of time to fully develop*/
+@media only screen and (max-width: 675px){
 
     .leaflet-container .leaflet-control-attribution,
 
     .leaflet-container .leaflet-control-scale {
 
-        font-size: 14px;
+        font-size: 10px;
 
     }
-
-
-
-    .legend-container {
-
-        display: none;
-
-    }
-
-
-
 }
